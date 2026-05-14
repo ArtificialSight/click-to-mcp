@@ -1,0 +1,61 @@
+# click-to-mcp
+
+Auto-wrap any [Click](https://click.palletsprojects.com/)/[typer](https://typer.tiangolo.com/) CLI as an [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) server.
+
+## Why?
+
+AI coding agents (Claude Code, Codex, Cursor) use MCP to interact with tools. 
+Instead of rewriting your CLI tools as MCP servers, use click-to-mcp to wrap them automatically.
+
+## Usage
+
+```python
+# my_cli.py
+import click
+from click_to_mcp import serve_stdio
+
+@click.group()
+def cli():
+    """My CLI tool."""
+    pass
+
+@cli.command()
+@click.argument("file")
+@click.option("--verbose", is_flag=True)
+def validate(file: str, verbose: bool) -> None:
+    """Validate a file."""
+    click.echo(f"Validating {file}...")
+
+if __name__ == "__main__":
+    # Run as MCP server over stdio
+    serve_stdio(cli, name="my-cli", description="My CLI as MCP server")
+```
+
+Then configure MCP clients to run `python my_cli.py` as a stdio transport.
+
+## Install
+
+```bash
+pip install click-to-mcp
+```
+
+## Development
+
+```bash
+git clone https://github.com/revenueholdings/click-to-mcp
+cd click-to-mcp
+pip install -e .
+python -m click_to_mcp  # starts MCP server for demo CLI
+```
+
+## MCP Protocol
+
+Click-to-MCP implements the standard MCP protocol with:
+
+- `initialize` — protocol handshake
+- `tools/list` — discover all CLI commands as MCP tools
+- `tools/call` — invoke a CLI command with arguments
+
+## License
+
+Apache 2.0
