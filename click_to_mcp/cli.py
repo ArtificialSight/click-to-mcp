@@ -160,6 +160,69 @@ def demo_http(host: str, port: int):
     _serve_http(demo_cli, name="click-to-mcp-demo", host=host, port=port)
 
 
+@cli.command("serve-http-streamable")
+@click.argument("name", required=False, default=None)
+@click.option("--host", default="127.0.0.1", help="Host to bind (default: 127.0.0.1)")
+@click.option("--port", default=8001, type=int, help="Port to bind (default: 8001)")
+@click.option("--all", "serve_all", is_flag=True, help="Serve all discoverable CLIs")
+def serve_http_streamable(name: Optional[str], host: str, port: int, serve_all: bool):
+    """Serve a CLI as an MCP server over Streamable HTTP (no SSE).
+
+    Uses a single POST /message endpoint — simpler than HTTP+SSE, compatible
+    with more MCP clients. Default port is 8001 (different from serve-http).
+    Requires: pip install 'click-to-mcp[http]'
+    """
+    if not name and not serve_all:
+        click.echo("Error: Specify a CLI name or --all", err=True)
+        sys.exit(1)
+
+    try:
+        from .streamable_http import serve_http_streamable as _serve
+    except ImportError as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
+
+    if serve_all:
+        clis = scan_entry_points()
+        if not clis:
+            click.echo("No CLIs found to serve.", err=True)
+            sys.exit(1)
+        click.echo(f"Multiple CLIs found. Serving the first one: {clis[0].name}", err=True)
+        target_cli = load_cli(clis[0].name)
+        if target_cli is None:
+            click.echo(f"Error: Could not load CLI '{clis[0].name}'", err=True)
+            sys.exit(1)
+        _serve(target_cli, name=clis[0].name, host=host, port=port)
+        return
+
+    target_cli = load_cli(name)
+    if target_cli is None:
+        click.echo(f"Error: CLI '{name}' not found.", err=True)
+        click.echo("Run 'click-to-mcp discover' to see available CLIs.", err=True)
+        sys.exit(1)
+
+    _serve(target_cli, name=name, host=host, port=port)
+
+
+@cli.command("demo-http-streamable")
+@click.option("--host", default="127.0.0.1", help="Host to bind (default: 127.0.0.1)")
+@click.option("--port", default=8001, type=int, help="Port to bind (default: 8001)")
+def demo_http_streamable(host: str, port: int):
+    """Run the built-in demo CLI as a Streamable HTTP MCP server (no SSE).
+
+    Requires: pip install 'click-to-mcp[http]'
+    """
+    try:
+        from .streamable_http import serve_http_streamable as _serve
+    except ImportError as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
+
+    from .demo import cli as demo_cli
+
+    _serve(demo_cli, name="click-to-mcp-demo", host=host, port=port)
+
+
 def main():
     """Entry point for the click-to-mcp CLI."""
     cli()

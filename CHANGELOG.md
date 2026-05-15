@@ -2,6 +2,24 @@
 
 All notable changes to click-to-mcp will be documented in this file.
 
+## [0.4.0] — 2026-05-15
+
+### Added
+
+- **Streamable HTTP transport** — New transport mode using a single POST `/message` endpoint. No SSE (Server-Sent Events) required, compatible with more MCP clients.
+  - `click-to-mcp serve-http-streamable <name>` — Serve any discovered CLI
+  - `click-to-mcp demo-http-streamable` — Run the built-in demo
+  - `run_http_streamable()` — Library API (from `click_to_mcp` import)
+  - `serve_http_streamable()` — Low-level API (from `click_to_mcp.streamable_http`)
+  - Default port 8001 (different from HTTP+SSE's 8000)
+- **Batch message support** — Streamable HTTP transport accepts both single JSON-RPC messages and arrays (batch).
+- 13 new tests covering Streamable HTTP transport (health, initialize, tools/list, tools/call, notifications, batch, edge cases)
+
+### Changed
+
+- Version bumped to 0.4.0
+- `initialize` response now includes `"streamableHttp": {}` capability
+
 ## [0.2.1] — 2026-05-15
 
 ### Added
