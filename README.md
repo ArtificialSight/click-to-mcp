@@ -42,7 +42,7 @@ pip install click-to-mcp
 ## Development
 
 ```bash
-git clone https://github.com/revenueholdings/click-to-mcp
+git clone https://github.com/Coding-Dev-Tools/click-to-mcp
 cd click-to-mcp
 pip install -e .
 python -m click_to_mcp  # starts MCP server for demo CLI
