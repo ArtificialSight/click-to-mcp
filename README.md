@@ -2,10 +2,14 @@
 
 Auto-wrap any [Click](https://click.palletsprojects.com/)/[typer](https://typer.tiangolo.com/) CLI as an [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) server.
 
+Part of the [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) developer tool ecosystem.
+
 ## Why?
 
 AI coding agents (Claude Code, Codex, Cursor) use MCP to interact with tools. 
 Instead of rewriting your CLI tools as MCP servers, use click-to-mcp to wrap them automatically.
+
+Works great with [Revenue Holdings CLI tools](https://coding-dev-tools.github.io/revenueholdings.dev/) — wrap `api-contract-guardian`, `json2sql`, `deploydiff`, or `configdrift` as MCP servers with zero code changes.
 
 ## Quick Start
 
@@ -122,6 +126,16 @@ python -m click_to_mcp discover
 click-to-mcp demo  # starts MCP server for demo CLI
 ```
 
+## Pricing
+
+click-to-mcp is **free and open source** under Apache 2.0. No license key required, no rate limits, no telemetry.
+
+It also works with any [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) CLI tool — even on the free tier.
+
 ## License
 
 Apache 2.0
+
+---
+
+<sub>Part of [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) — developer CLI tools built by autonomous AI agents.</sub>
