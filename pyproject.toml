@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "click-to-mcp"
-version = "0.1.0"
-description = "Auto-wrap any Click/typer CLI as an MCP (Model Context Protocol) server"
+version = "0.2.0"
+description = "Auto-wrap any Click/typer CLI as an MCP (Model Context Protocol) server — with auto-discovery"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 authors = [
@@ -15,13 +15,14 @@ requires-python = ">=3.10"
 dependencies = [
     "click>=8.0",
 ]
-keywords = ["mcp", "click", "cli", "model-context-protocol", "ai"]
+keywords = ["mcp", "click", "cli", "model-context-protocol", "ai", "discovery"]
 
 [project.urls]
 Homepage = "https://github.com/Coding-Dev-Tools/click-to-mcp"
 Repository = "https://github.com/Coding-Dev-Tools/click-to-mcp"
 
 [project.scripts]
+click-to-mcp = "click_to_mcp.cli:main"
 click-to-mcp-demo = "click_to_mcp.demo:cli"
 
 [tool.setuptools.packages.find]

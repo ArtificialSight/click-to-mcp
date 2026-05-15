@@ -1,10 +1,17 @@
 """
-click-to-mcp — Auto-wrap any Click/typer CLI as an MCP server.
+click-to-mcp — Auto-wrap any Click/typer CLI as an MCP (Model Context Protocol) server.
 
 Usage:
-    from click_to_mcp import run
-    from my_cli import cli_group
-    run(cli_group, prefix="my-cli")
+    pip install click-to-mcp
+    click-to-mcp discover            # List all Click/typer CLIs
+    click-to-mcp serve <name>        # Serve a specific CLI as MCP
+    click-to-mcp serve --all         # Serve first discoverable CLI
+    click-to-mcp demo                # Run built-in demo
+
+Or use as a library:
+    from click_to_mcp import run, serve_stdio, cli_to_mcp_tools
+    from my_cli import app
+    run(app, prefix="my-cli")
 """
 
 from __future__ import annotations
@@ -13,8 +20,9 @@ from typing import Any
 
 from .adapter import cli_to_mcp_tools, CliToolDef
 from .server import serve_stdio
+from .discover import scan_entry_points, load_cli, find_our_clis, DiscoveredCLI
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 def run(app: Any, prefix: str = "", name: str = "") -> None:
@@ -32,7 +40,6 @@ def run(app: Any, prefix: str = "", name: str = "") -> None:
 
     if not name:
         name = getattr(app, "name", None) or "cli"
-    # Get description, handling TyperInfo objects
     desc = ""
     if hasattr(app, "info"):
         info_desc = getattr(app.info, "help", None)
@@ -51,4 +58,7 @@ def run(app: Any, prefix: str = "", name: str = "") -> None:
     )
 
 
-__all__ = ["cli_to_mcp_tools", "CliToolDef", "serve_stdio", "run"]
+__all__ = [
+    "cli_to_mcp_tools", "CliToolDef", "serve_stdio", "run",
+    "scan_entry_points", "load_cli", "find_our_clis", "DiscoveredCLI",
+]
