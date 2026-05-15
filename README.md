@@ -19,18 +19,28 @@ Install directly from GitHub (PyPI coming soon):
 pip install git+https://github.com/Coding-Dev-Tools/click-to-mcp.git
 ```
 
+For HTTP+SSE transport (web-based MCP clients), install with the `http` extra:
+
+```bash
+pip install "click-to-mcp[http] @ git+https://github.com/Coding-Dev-Tools/click-to-mcp.git"
+```
+
 ```bash
 # Discover all Click/typer CLIs installed in your environment
 click-to-mcp discover
 
-# Serve a specific CLI as an MCP server
+# Serve a specific CLI as an MCP server (stdio transport)
 click-to-mcp serve api-contract-guardian
 
+# Serve over HTTP+SSE (for web-based MCP clients)
+click-to-mcp serve-http api-contract-guardian --port 8000
+
 # Or serve the built-in demo
-click-to-mcp demo
+click-to-mcp demo            # stdio
+click-to-mcp demo-http       # HTTP+SSE on port 8000
 ```
 
-Then configure your MCP client to run `click-to-mcp serve <name>` as a stdio transport.
+Then configure your MCP client to connect via stdio or HTTP.
 
 ## How It Works
 
@@ -189,8 +199,12 @@ click-to-mcp discover
 # Serve a specific CLI as an MCP server over stdio
 click-to-mcp serve <name>
 
+# Serve over HTTP+SSE (requires pip install "click-to-mcp[http]")
+click-to-mcp serve-http <name> --port 8000
+
 # Serve the built-in demo
-click-to-mcp demo
+click-to-mcp demo            # stdio
+click-to-mcp demo-http       # HTTP+SSE
 
 # Version info
 click-to-mcp --version
@@ -233,10 +247,52 @@ run(app, prefix="my-cli")
 
 - **Auto-discovery**: `click-to-mcp discover` scans `console_scripts` entry points for Click/typer CLIs
 - **Serve any CLI**: `click-to-mcp serve <name>` wraps any discovered CLI as an MCP server
+- **HTTP+SSE transport**: `click-to-mcp serve-http <name>` serves over HTTP for web-based clients (v0.3.0+)
 - **Supports both Click and Typer**: Full compatibility with both frameworks
 - **Nested command groups**: Handles subcommand groups recursively with prefixed tool names
 - **Parameter introspection**: Correctly maps Click options, arguments, types, enums, defaults, and help text to JSON Schema
-- **Full MCP protocol**: Implements `initialize`, `tools/list`, `tools/call` over stdio
+- **Full MCP protocol**: Implements `initialize`, `tools/list`, `tools/call` over stdio and HTTP+SSE
+- **Health endpoint**: HTTP servers expose `/health` for monitoring and load balancers
+
+## Transports
+
+### Stdio (default)
+
+Best for local CLI-based MCP clients (Claude Code, Cursor, Cline). No extra dependencies needed.
+
+```bash
+click-to-mcp serve <name>
+```
+
+### HTTP+SSE (v0.3.0+)
+
+Best for web-based MCP clients, remote access, and multi-user setups. Requires the `[http]` extra.
+
+```bash
+# Install HTTP dependencies
+pip install "click-to-mcp[http]"
+
+# Start an HTTP+SSE server
+click-to-mcp serve-http <name> --host 127.0.0.1 --port 8000
+```
+
+Endpoints:
+| Endpoint | Method | Description |
+|---|---|---|
+| `/sse` | GET | SSE stream (server-to-client events) |
+| `/messages` | POST | JSON-RPC message endpoint |
+| `/health` | GET | Health check (JSON status) |
+
+Configure your MCP client with the SSE URL:
+```json
+{
+  "mcpServers": {
+    "my-cli": {
+      "url": "http://127.0.0.1:8000/sse"
+    }
+  }
+}
+```
 
 ## MCP Protocol
 
@@ -271,9 +327,10 @@ Then agents can use it as: `your-cli mcp`
 ```bash
 git clone https://github.com/Coding-Dev-Tools/click-to-mcp
 cd click-to-mcp
-pip install -e ".[dev]"
-python -m pytest tests/ -v          # 12 tests
-click-to-mcp demo                    # starts MCP server for demo CLI
+pip install -e ".[dev,http]"
+python -m pytest tests/ -v          # 23 tests (12 stdio + 11 HTTP)
+click-to-mcp demo                    # starts MCP stdio server for demo CLI
+click-to-mcp demo-http               # starts MCP HTTP+SSE server on port 8000
 ```
 
 ## Pricing

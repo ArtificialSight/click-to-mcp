@@ -22,7 +22,7 @@ from .adapter import cli_to_mcp_tools, CliToolDef
 from .server import serve_stdio
 from .discover import scan_entry_points, load_cli, find_our_clis, DiscoveredCLI
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 
 def run(app: Any, prefix: str = "", name: str = "") -> None:
@@ -58,7 +58,44 @@ def run(app: Any, prefix: str = "", name: str = "") -> None:
     )
 
 
+def run_http(app: Any, prefix: str = "", name: str = "",
+             host: str = "127.0.0.1", port: int = 8000) -> None:
+    """High-level entry point: serve a Click/typer app as an MCP server over HTTP+SSE.
+
+    Requires optional dependencies: pip install 'click-to-mcp[http]'
+
+    Args:
+        app: A click.Group or typer.Typer instance.
+        prefix: Optional tool name prefix.
+        name: Optional server name (defaults to app name or 'cli').
+        host: Host to bind (default: 127.0.0.1).
+        port: Port to bind (default: 8000).
+    """
+    from .http_server import serve_http
+
+    if not name:
+        name = getattr(app, "name", None) or "cli"
+    desc = ""
+    if hasattr(app, "info"):
+        info_desc = getattr(app.info, "help", None)
+        if info_desc and "DefaultPlaceholder" not in str(type(info_desc)):
+            desc = str(info_desc)
+    if not desc:
+        desc = getattr(app, "help", None) or ""
+    if not isinstance(desc, str):
+        desc = str(desc) if desc else ""
+
+    serve_http(
+        app,
+        name=name,
+        description=desc,
+        prefix=prefix,
+        host=host,
+        port=port,
+    )
+
+
 __all__ = [
-    "cli_to_mcp_tools", "CliToolDef", "serve_stdio", "run",
+    "cli_to_mcp_tools", "CliToolDef", "serve_stdio", "run", "run_http",
     "scan_entry_points", "load_cli", "find_our_clis", "DiscoveredCLI",
 ]
