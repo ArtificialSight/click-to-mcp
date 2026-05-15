@@ -15,7 +15,13 @@ Works great with [Revenue Holdings CLI tools](https://coding-dev-tools.github.io
 
 ```bash
 pip install click-to-mcp
+```
 
+Or install directly from GitHub:
+
+```bash
+pip install git+https://github.com/Coding-Dev-Tools/click-to-mcp.git
+```
 # Discover all Click/typer CLIs installed in your environment
 click-to-mcp discover
 
