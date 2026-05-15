@@ -22,7 +22,7 @@ from .adapter import cli_to_mcp_tools, CliToolDef
 from .server import serve_stdio
 from .discover import scan_entry_points, load_cli, find_our_clis, DiscoveredCLI
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 
 def run(app: Any, prefix: str = "", name: str = "") -> None:

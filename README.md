@@ -13,15 +13,13 @@ Works great with [Revenue Holdings CLI tools](https://coding-dev-tools.github.io
 
 ## Quick Start
 
-```bash
-pip install click-to-mcp
-```
-
-Or install directly from GitHub:
+Install directly from GitHub (PyPI coming soon):
 
 ```bash
 pip install git+https://github.com/Coding-Dev-Tools/click-to-mcp.git
 ```
+
+```bash
 # Discover all Click/typer CLIs installed in your environment
 click-to-mcp discover
 
@@ -33,6 +31,152 @@ click-to-mcp demo
 ```
 
 Then configure your MCP client to run `click-to-mcp serve <name>` as a stdio transport.
+
+## How It Works
+
+click-to-mcp introspects your Click/typer CLI at runtime and maps every command to an MCP tool:
+
+| Click Concept | MCP Mapping |
+|---|---|
+| `@click.command()` | MCP tool |
+| `@click.argument()` | Required input property |
+| `@click.option()` | Optional input property with default |
+| `click.Choice` | JSON Schema `enum` |
+| `click.INT/FLOAT` | JSON Schema `integer`/`number` |
+| `click.BOOL` / `is_flag` | JSON Schema `boolean` |
+| Nested `click.Group` | Prefixed tools (e.g. `config_show`) |
+
+No annotations, no decorators, no boilerplate. Your existing Click CLI *is* the MCP server.
+
+## MCP Workflow with AI Coding Agents
+
+This section shows how to integrate click-to-mcp with popular AI coding tools so your CLIs become first-class tools that AI agents can invoke directly.
+
+### Claude Code
+
+Add your CLI as an MCP server in your project's `.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "api-contract-guardian": {
+      "command": "click-to-mcp",
+      "args": ["serve", "api-contract-guardian"]
+    },
+    "json2sql": {
+      "command": "click-to-mcp",
+      "args": ["serve", "json2sql"]
+    },
+    "deploydiff": {
+      "command": "click-to-mcp",
+      "args": ["serve", "deploydiff"]
+    }
+  }
+}
+```
+
+Now when you ask Claude Code to "validate my API contracts", it will automatically call the `acg_validate` MCP tool with the right arguments — no manual command-line invocation needed.
+
+### Cursor
+
+Add to your Cursor MCP settings (`.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "api-contract-guardian": {
+      "command": "click-to-mcp",
+      "args": ["serve", "api-contract-guardian"]
+    }
+  }
+}
+```
+
+### Cline / VS Code
+
+Add to `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "api-contract-guardian": {
+      "command": "click-to-mcp",
+      "args": ["serve", "api-contract-guardian"]
+    }
+  }
+}
+```
+
+### Custom Integration (Programmatic)
+
+For CLIs that aren't installed as entry points, use the library API:
+
+```python
+# my_mcp_server.py
+from click_to_mcp import run
+from my_cli import app  # Your Click/typer CLI
+
+run(app, prefix="my-cli", name="my-cli-mcp")
+```
+
+Then reference the script directly:
+
+```json
+{
+  "mcpServers": {
+    "my-cli": {
+      "command": "python",
+      "args": ["my_mcp_server.py"]
+    }
+  }
+}
+```
+
+### What the Agent Sees
+
+When your MCP server is configured, the AI agent sees your CLI commands as native tools. For example, with api-contract-guardian:
+
+```
+Agent: "I need to validate the API contract against the staging server."
+→ Calls MCP tool: acg_validate
+  Arguments: { "spec_file": "openapi.yaml", "base_url": "https://staging.api.com", "strict": true, "output_format": "json" }
+← Result: "Validating openapi.yaml against https://staging.api.com...\n✓ All contracts pass"
+```
+
+The agent doesn't need to know shell syntax, argument flags, or command names. It just calls the tool with structured arguments, and click-to-mcp handles the rest.
+
+## Examples
+
+### Quick Start (3 lines)
+
+```python
+import click
+from click_to_mcp import run
+
+@click.group()
+def my_cli():
+    """My awesome CLI tool."""
+    pass
+
+@my_cli.command()
+@click.argument("name")
+@click.option("--loud", is_flag=True, help="Shout the greeting")
+def hello(name: str, loud: bool):
+    """Say hello to someone."""
+    msg = f"Hello, {name}!"
+    if loud:
+        msg = msg.upper()
+    click.echo(msg)
+
+if __name__ == "__main__":
+    run(my_cli, prefix="my-cli", name="my-cli-mcp")
+```
+
+See [examples/quick_start.py](examples/quick_start.py) for the full runnable example.
+
+### Wrapping api-contract-guardian
+
+See [examples/api_contract_guardian_mcp.py](examples/api_contract_guardian_mcp.py) for a demo showing how to wrap API Contract Guardian as an MCP server with `validate`, `extract`, and `monitor` commands.
 
 ## Usage
 
@@ -127,9 +271,9 @@ Then agents can use it as: `your-cli mcp`
 ```bash
 git clone https://github.com/Coding-Dev-Tools/click-to-mcp
 cd click-to-mcp
-pip install -e .
-python -m click_to_mcp discover
-click-to-mcp demo  # starts MCP server for demo CLI
+pip install -e ".[dev]"
+python -m pytest tests/ -v          # 12 tests
+click-to-mcp demo                    # starts MCP server for demo CLI
 ```
 
 ## Pricing
