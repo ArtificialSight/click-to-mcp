@@ -7,14 +7,14 @@ from __future__ import annotations
 import json
 import sys
 import traceback
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from .adapter import cli_to_mcp_tools, CliToolDef
+from .adapter import CliToolDef, cli_to_mcp_tools
 
 
-def _make_jsonrpc_response(request_id: Any, result: Any = None, error: Optional[Dict] = None) -> str:
+def _make_jsonrpc_response(request_id: Any, result: Any = None, error: dict | None = None) -> str:
     """Build a JSON-RPC 2.0 response."""
-    resp: Dict[str, Any] = {"jsonrpc": "2.0", "id": request_id}
+    resp: dict[str, Any] = {"jsonrpc": "2.0", "id": request_id}
     if error:
         resp["error"] = error
     else:
@@ -33,7 +33,7 @@ def serve_stdio(
         description: Server description.
         prefix: Optional prefix for tool names.
     """
-    tools: List[CliToolDef] = cli_to_mcp_tools(cli_group, prefix=prefix)
+    tools: list[CliToolDef] = cli_to_mcp_tools(cli_group, prefix=prefix)
     tool_map = {t.name: t for t in tools}
 
     # Build the tools list for MCP list_tools response

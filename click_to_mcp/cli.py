@@ -11,13 +11,11 @@ Usage:
 
 from __future__ import annotations
 
-import sys
-from typing import Optional
-
 import click
+import sys
 
-from . import serve_stdio, __version__
-from .discover import scan_entry_points, load_cli
+from . import __version__, serve_stdio
+from .discover import load_cli, scan_entry_points
 
 try:
     from revenueholdings_license import require_license
@@ -65,7 +63,7 @@ def discover():
 @cli.command()
 @click.argument("name", required=False, default=None)
 @click.option("--all", "serve_all", is_flag=True, help="Serve all discoverable CLIs")
-def serve(name: Optional[str], serve_all: bool):
+def serve(name: str | None, serve_all: bool):
     """Serve a CLI as an MCP server over stdio.
 
     Specify a CLI NAME from 'click-to-mcp discover', or use --all.
@@ -103,7 +101,7 @@ def serve(name: Optional[str], serve_all: bool):
 @click.option("--host", default="127.0.0.1", help="Host to bind (default: 127.0.0.1)")
 @click.option("--port", default=8000, type=int, help="Port to bind (default: 8000)")
 @click.option("--all", "serve_all", is_flag=True, help="Serve all discoverable CLIs")
-def serve_http(name: Optional[str], host: str, port: int, serve_all: bool):
+def serve_http(name: str | None, host: str, port: int, serve_all: bool):
     """Serve a CLI as an MCP server over HTTP+SSE.
 
     Specify a CLI NAME from 'click-to-mcp discover', or use --all.
@@ -174,7 +172,7 @@ def demo_http(host: str, port: int):
 @click.option("--host", default="127.0.0.1", help="Host to bind (default: 127.0.0.1)")
 @click.option("--port", default=8001, type=int, help="Port to bind (default: 8001)")
 @click.option("--all", "serve_all", is_flag=True, help="Serve all discoverable CLIs")
-def serve_http_streamable(name: Optional[str], host: str, port: int, serve_all: bool):
+def serve_http_streamable(name: str | None, host: str, port: int, serve_all: bool):
     """Serve a CLI as an MCP server over Streamable HTTP (no SSE).
 
     Uses a single POST /message endpoint — simpler than HTTP+SSE, compatible

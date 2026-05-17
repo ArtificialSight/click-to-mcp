@@ -18,9 +18,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from .adapter import cli_to_mcp_tools, CliToolDef
+from .adapter import CliToolDef, cli_to_mcp_tools
+from .discover import DiscoveredCLI, find_our_clis, load_cli, scan_entry_points
 from .server import serve_stdio
-from .discover import scan_entry_points, load_cli, find_our_clis, DiscoveredCLI
 
 __version__ = "0.4.0"
 
@@ -36,8 +36,6 @@ def run(app: Any, prefix: str = "", name: str = "") -> None:
         prefix: Optional tool name prefix (e.g. 'acg' for api-contract-guardian).
         name: Optional server name (defaults to app name or 'cli').
     """
-    import inspect
-
     if not name:
         name = getattr(app, "name", None) or "cli"
     desc = ""

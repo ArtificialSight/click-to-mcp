@@ -4,11 +4,11 @@ MCP Tool Definitions: Adapter that introspects Click/typer CLIs.
 
 from __future__ import annotations
 
+import click
 import dataclasses
 import inspect
-from typing import Any, Callable, Dict, List, Optional
-
-import click
+from collections.abc import Callable
+from typing import Any
 
 
 @dataclasses.dataclass
@@ -17,7 +17,7 @@ class CliToolDef:
 
     name: str
     description: str
-    input_schema: Dict[str, Any]
+    input_schema: dict[str, Any]
     handler: Callable[..., str]
 
 
@@ -26,9 +26,9 @@ def _param_type_name(t: Any) -> str:
     return type(t).__name__
 
 
-def _click_type_to_json_schema(param: click.Parameter) -> Dict[str, Any]:
+def _click_type_to_json_schema(param: click.Parameter) -> dict[str, Any]:
     """Map a Click parameter type to a JSON Schema property definition."""
-    base: Dict[str, Any] = {}
+    base: dict[str, Any] = {}
 
     t = param.type
     t_name = _param_type_name(t)
@@ -59,7 +59,7 @@ def _click_type_to_json_schema(param: click.Parameter) -> Dict[str, Any]:
     return base
 
 
-def _build_click_tool_def(cmd: click.Command, prefix: str = "") -> Optional[CliToolDef]:
+def _build_click_tool_def(cmd: click.Command, prefix: str = "") -> CliToolDef | None:
     """Convert a single Click Command into a CliToolDef.
 
     Returns None if the command has subcommands (handled recursively).
@@ -69,9 +69,9 @@ def _build_click_tool_def(cmd: click.Command, prefix: str = "") -> Optional[CliT
     if isinstance(cmd, click.Group):
         return None
 
-    properties: Dict[str, Any] = {}
-    required: List[str] = []
-    positional_args: List[str] = []  # track positional arg order
+    properties: dict[str, Any] = {}
+    required: list[str] = []
+    positional_args: list[str] = []  # track positional arg order
 
     for param in cmd.params:
         if isinstance(param, click.Option):
@@ -97,7 +97,7 @@ def _build_click_tool_def(cmd: click.Command, prefix: str = "") -> Optional[CliT
         from click.testing import CliRunner
 
         runner = CliRunner()
-        args: List[str] = []
+        args: list[str] = []
 
         # Positional args first (in order of definition)
         for pos_key in positional_args:
@@ -164,14 +164,14 @@ def _get_click_group(cli: Any) -> click.Group:
     )
 
 
-def cli_to_mcp_tools(cli, prefix: str = "") -> List[CliToolDef]:
+def cli_to_mcp_tools(cli, prefix: str = "") -> list[CliToolDef]:
     """Recursively introspect a Click Group and return all leaf tools.
 
     Supports both click.Group and typer.Typer instances.
     """
     cli = _get_click_group(cli)
 
-    tools: List[CliToolDef] = []
+    tools: list[CliToolDef] = []
 
     for name, cmd in cli.commands.items():
         if isinstance(cmd, click.Group):

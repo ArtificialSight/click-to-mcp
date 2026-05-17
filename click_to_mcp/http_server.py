@@ -11,9 +11,9 @@ from __future__ import annotations
 
 import json
 import traceback
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from .adapter import cli_to_mcp_tools, CliToolDef
+from .adapter import CliToolDef, cli_to_mcp_tools
 
 
 def _check_http_deps() -> None:
@@ -59,14 +59,14 @@ def serve_http(
     """
     _check_http_deps()
 
+    import uvicorn
+    from sse_starlette.sse import EventSourceResponse
     from starlette.applications import Starlette
     from starlette.requests import Request
     from starlette.responses import JSONResponse, Response
-    from starlette.routing import Route, Mount
-    import uvicorn
-    from sse_starlette.sse import EventSourceResponse
+    from starlette.routing import Route
 
-    tools: List[CliToolDef] = cli_to_mcp_tools(cli_group, prefix=prefix)
+    tools: list[CliToolDef] = cli_to_mcp_tools(cli_group, prefix=prefix)
     tool_map = {t.name: t for t in tools}
 
     mcp_tool_list = [
@@ -84,10 +84,9 @@ def serve_http(
         "description": description or f"MCP server for {name}",
     }
 
-    sessions: Dict[str, Any] = {}  # session_id -> dict
 
-    def _make_jsonrpc_response(request_id: Any, result: Any = None, error: Optional[Dict] = None) -> Dict:
-        resp: Dict[str, Any] = {"jsonrpc": "2.0", "id": request_id}
+    def _make_jsonrpc_response(request_id: Any, result: Any = None, error: dict | None = None) -> dict:
+        resp: dict[str, Any] = {"jsonrpc": "2.0", "id": request_id}
         if error:
             resp["error"] = error
         else:
@@ -99,7 +98,7 @@ def serve_http(
         async def event_generator():
             yield {
                 "event": "endpoint",
-                "data": f"/messages?session_id=default",
+                "data": "/messages?session_id=default",
             }
 
         return EventSourceResponse(event_generator())

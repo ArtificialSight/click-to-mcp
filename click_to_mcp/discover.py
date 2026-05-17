@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import importlib
 from dataclasses import dataclass
-from importlib.metadata import entry_points, distribution
-from typing import Any, Dict, List, Optional
+from importlib.metadata import distribution, entry_points
+from typing import Any
 
 
 @dataclass
@@ -50,13 +50,13 @@ def _get_package_metadata(pkg_name: str) -> str:
         return ""
 
 
-def scan_entry_points() -> List[DiscoveredCLI]:
+def scan_entry_points() -> list[DiscoveredCLI]:
     """Scan all installed console_scripts entry points for Click/typer CLIs.
 
     Returns:
         List of discovered CLIs that appear to use Click or typer.
     """
-    discovered: List[DiscoveredCLI] = []
+    discovered: list[DiscoveredCLI] = []
 
     try:
         eps = entry_points(group="console_scripts")
@@ -138,13 +138,13 @@ def import_cli(module_path: str, attr_name: str) -> Any | None:
         return None
 
 
-def find_our_clis() -> Dict[str, Any]:
+def find_our_clis() -> dict[str, Any]:
     """Specifically find Revenue Holdings CLI tools.
 
     Returns:
         Dict of {cli_name: click_or_typer_app} for our projects.
     """
-    result: Dict[str, Any] = {}
+    result: dict[str, Any] = {}
     try:
         eps = entry_points(group="console_scripts")
     except TypeError:

@@ -15,9 +15,9 @@ from __future__ import annotations
 
 import json
 import traceback
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from .adapter import cli_to_mcp_tools, CliToolDef
+from .adapter import CliToolDef, cli_to_mcp_tools
 
 
 def _check_http_deps() -> None:
@@ -62,13 +62,13 @@ def serve_http_streamable(
     """
     _check_http_deps()
 
+    import uvicorn
     from starlette.applications import Starlette
     from starlette.requests import Request
     from starlette.responses import JSONResponse, Response
     from starlette.routing import Route
-    import uvicorn
 
-    tools: List[CliToolDef] = cli_to_mcp_tools(cli_group, prefix=prefix)
+    tools: list[CliToolDef] = cli_to_mcp_tools(cli_group, prefix=prefix)
     tool_map = {t.name: t for t in tools}
 
     mcp_tool_list = [
@@ -89,9 +89,9 @@ def serve_http_streamable(
     initialized = False
 
     def _make_jsonrpc_response(
-        request_id: Any, result: Any = None, error: Optional[Dict] = None
-    ) -> Dict:
-        resp: Dict[str, Any] = {"jsonrpc": "2.0", "id": request_id}
+        request_id: Any, result: Any = None, error: dict | None = None
+    ) -> dict:
+        resp: dict[str, Any] = {"jsonrpc": "2.0", "id": request_id}
         if error:
             resp["error"] = error
         else:
@@ -115,7 +115,7 @@ def serve_http_streamable(
 
         # Support both single message and batch (array)
         messages = msg if isinstance(msg, list) else [msg]
-        responses: List[Dict] = []
+        responses: list[dict] = []
 
         for single_msg in messages:
             req_id = single_msg.get("id")
@@ -251,7 +251,7 @@ def serve_http_streamable(
         file=__import__("sys").stderr,
     )
     print(
-        f"  Transport: Streamable HTTP (no SSE)",
+        "  Transport: Streamable HTTP (no SSE)",
         file=__import__("sys").stderr,
     )
 
