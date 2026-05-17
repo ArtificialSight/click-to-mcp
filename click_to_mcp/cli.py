@@ -19,9 +19,18 @@ import click
 from . import serve_stdio, __version__
 from .discover import scan_entry_points, load_cli
 
+try:
+    from revenueholdings_license import require_license
+except ImportError:
+    def require_license(tool):
+        def decorator(func):
+            return func
+        return decorator
+
 
 @click.group()
 @click.version_option(version=__version__, prog_name="click-to-mcp")
+@require_license("click-to-mcp")
 def cli():
     """Auto-wrap any Click/typer CLI as an MCP (Model Context Protocol) server."""
     pass
