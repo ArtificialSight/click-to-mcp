@@ -2,17 +2,15 @@
 
 from __future__ import annotations
 
+import contextlib
 import dataclasses
 import json
+import pytest
 import subprocess
 import sys
-
-import pytest
-
-from click_to_mcp.adapter import cli_to_mcp_tools, CliToolDef
+from click_to_mcp.adapter import CliToolDef, cli_to_mcp_tools
 from click_to_mcp.demo import cli as demo_cli
 from click_to_mcp.discover import DiscoveredCLI, scan_entry_points
-
 
 # ---------------------------------------------------------------------------
 # TestAdapter — unit tests for cli_to_mcp_tools with the demo CLI
@@ -102,10 +100,8 @@ def _run_server(messages: list[dict], timeout: int = 15) -> list[dict]:
         line = line.strip()
         if not line:
             continue
-        try:
+        with contextlib.suppress(json.JSONDecodeError):
             responses.append(json.loads(line))
-        except json.JSONDecodeError:
-            pass
     return responses
 
 

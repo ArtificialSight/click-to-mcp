@@ -38,7 +38,11 @@ def acg():
 @click.argument("spec_file", type=click.Path(exists=False))
 @click.option("--base-url", default="http://localhost:8000", help="Base URL of the API")
 @click.option("--strict/--no-strict", default=False, help="Fail on any contract violation")
-@click.option("--format", "-f", "output_format", type=click.Choice(["json", "table", "junit"]), default="table", help="Output format")
+@click.option(
+    "--format", "-f", "output_format",
+    type=click.Choice(["json", "table", "junit"]),
+    default="table", help="Output format",
+)
 def validate(spec_file: str, base_url: str, strict: bool, output_format: str):
     """Validate an OpenAPI spec against a live API."""
     click.echo(f"Validating {spec_file} against {base_url}...")
