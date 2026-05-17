@@ -18,7 +18,18 @@ from . import __version__, serve_stdio
 from .discover import load_cli, scan_entry_points
 
 try:
-    from revenueholdings_license import require_license
+    from revenueholdings_license import require_license as _require_license_raw
+    # The installed version may return a LicenseStatus object instead of a decorator.
+    # Wrap it to handle both cases.
+    def require_license(tool):
+        result = _require_license_raw(tool)
+        if callable(result):
+            # It returned a decorator — use it
+            return result
+        # It returned a LicenseStatus or other non-callable — return identity decorator
+        def decorator(func):
+            return func
+        return decorator
 except ImportError:
     def require_license(tool):
         def decorator(func):
@@ -293,6 +304,127 @@ def demo_http_streamable(host: str, port: int):
     from .demo import cli as demo_cli
 
     _serve(demo_cli, name="click-to-mcp-demo", host=host, port=port)
+
+
+@cli.command("config")
+@click.argument("name", required=False, default=None)
+@click.option("--client", "-c", type=click.Choice(
+    ["claude-desktop", "cursor", "vscode", "windsurf", "cline"],
+    case_sensitive=False,
+), default="claude-desktop", help="MCP client to generate config for (default: claude-desktop)")
+@click.option("--transport", "-t", type=click.Choice(
+    ["stdio", "http", "streamable-http"],
+    case_sensitive=False,
+), default="stdio", help="Transport type (default: stdio)")
+@click.option("--host", default="127.0.0.1", help="Host for HTTP transport (default: 127.0.0.1)")
+@click.option("--port", default=8000, type=int, help="Port for HTTP transport (default: 8000)")
+@click.option("--all", "config_all", is_flag=True, help="Generate config for all discoverable CLIs")
+@click.option("--copy", "copy_to_clipboard", is_flag=True, help="Copy to clipboard instead of stdout")
+def config(name: str | None, client: str, transport: str, host: str, port: int,
+           config_all: bool, copy_to_clipboard: bool):
+    """Generate MCP client configuration JSON.
+
+    Prints the JSON snippet to add to your MCP client config file.
+    Supports Claude Desktop, Cursor, VS Code Copilot, Windsurf, and Cline.
+
+    Examples:
+        click-to-mcp config my-cli
+        click-to-mcp config my-cli --client cursor
+        click-to-mcp config my-cli --transport http --port 9000
+        click-to-mcp config --all --client vscode
+    """
+    import json as _json
+
+    if not name and not config_all:
+        click.echo("Error: Specify a CLI name or --all", err=True)
+        sys.exit(1)
+
+    # Collect CLI names
+    cli_names: list[str] = []
+    if config_all:
+        clis = scan_entry_points()
+        if not clis:
+            click.echo("No CLIs found.", err=True)
+            sys.exit(1)
+        cli_names = [c.name for c in clis]
+    else:
+        # Verify the CLI exists
+        target_cli = load_cli(name)
+        if target_cli is None:
+            click.echo(f"Error: CLI '{name}' not found.", err=True)
+            click.echo("Run 'click-to-mcp discover' to see available CLIs.", err=True)
+            sys.exit(1)
+        cli_names = [name]
+
+    # Build MCP server configs
+    server_configs: dict[str, dict] = {}
+    for cli_name in cli_names:
+        if transport == "stdio":
+            server_configs[cli_name] = {
+                "command": "click-to-mcp",
+                "args": ["serve", cli_name],
+            }
+        elif transport == "http":
+            server_configs[cli_name] = {
+                "url": f"http://{host}:{port}/sse",
+            }
+        elif transport == "streamable-http":
+            server_configs[cli_name] = {
+                "url": f"http://{host}:{port}/message",
+            }
+
+    # Format output based on client
+    client_key = client.lower()
+    if client_key == "claude-desktop":
+        output = {"mcpServers": server_configs}
+    elif client_key == "cursor":
+        output = {"mcpServers": server_configs}
+    elif client_key == "vscode":
+        # VS Code Copilot uses "inputs" and "servers" at top level
+        output = {"mcp": {"servers": server_configs}}
+    elif client_key == "windsurf":
+        output = {"mcpServers": server_configs}
+    elif client_key == "cline":
+        output = {"mcpServers": server_configs}
+    else:
+        output = {"mcpServers": server_configs}
+
+    output_json = _json.dumps(output, indent=2)
+
+    if copy_to_clipboard:
+        import subprocess as _sp
+        try:
+            if sys.platform == "win32":
+                cmd = ["clip"]
+            elif sys.platform == "darwin":
+                cmd = ["pbcopy"]
+            else:
+                cmd = ["xclip", "-selection", "clipboard"]
+            proc = _sp.Popen(cmd, stdin=_sp.PIPE)
+            proc.communicate(output_json.encode())
+            if proc.returncode == 0:
+                click.echo("Configuration copied to clipboard!")
+            else:
+                click.echo(output_json)
+        except Exception:
+            click.echo(output_json)
+    else:
+        click.echo(output_json)
+
+    # Print helpful instructions
+    click.echo("", err=True)
+    config_paths = {
+        "claude-desktop": "~/Library/Application Support/Claude/claude_desktop_config.json (macOS)\n  %APPDATA%\\Claude\\claude_desktop_config.json (Windows)",
+        "cursor": ".cursor/mcp.json (in project root)",
+        "vscode": ".vscode/mcp.json (in project root)",
+        "windsurf": ".windsurf/mcp.json (in project root)",
+        "cline": "~/.cline/mcp_config.json or via Cline settings",
+    }
+    click.echo(f"Add this to your {client} config file:", err=True)
+    click.echo(f"  {config_paths.get(client_key, 'client config file')}", err=True)
+    if transport != "stdio":
+        transport_cmd = "serve-http-streamable" if transport == "streamable-http" else "serve-http"
+        click.echo(f"\nNote: Start the server first: click-to-mcp {transport_cmd} {cli_names[0]} --port {port}", err=True)
 
 
 def main():
