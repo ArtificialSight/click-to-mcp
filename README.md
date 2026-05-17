@@ -22,6 +22,7 @@ Install directly from GitHub (PyPI coming soon):
 
 ```bash
 pip install git+https://github.com/Coding-Dev-Tools/click-to-mcp.git
+Or install via Homebrew (macOS/Linux):```bashbrew tap Coding-Dev-Tools/tapbrew install click-to-mcp```Or install via Scoop (Windows):```bashscoop bucket add Coding-Dev-Tools https://github.com/Coding-Dev-Tools/scoop-bucketscoop install click-to-mcp```
 ```
 
 For HTTP+SSE transport (web-based MCP clients), install with the `http` extra:
