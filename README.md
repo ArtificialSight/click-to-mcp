@@ -50,6 +50,10 @@ pip install "click-to-mcp[http] @ git+https://github.com/Coding-Dev-Tools/click-
 # Discover all Click/typer CLIs installed in your environment
 click-to-mcp discover
 
+# List the MCP tools that would be exposed from a CLI (without starting a server)
+click-to-mcp list-tools api-contract-guardian
+click-to-mcp list-tools --all --json-output   # all CLIs, JSON for CI
+
 # Serve a specific CLI as an MCP server (stdio transport)
 click-to-mcp serve api-contract-guardian
 
@@ -267,6 +271,7 @@ run(app, prefix="my-cli")
 ## Features
 
 - **Auto-discovery**: `click-to-mcp discover` scans `console_scripts` entry points for Click/typer CLIs
+- **Tool preview**: `click-to-mcp list-tools <name>` shows MCP tools without starting a server (CI-friendly with `--json-output`)
 - **Serve any CLI**: `click-to-mcp serve <name>` wraps any discovered CLI as an MCP server
 - **HTTP+SSE transport**: `click-to-mcp serve-http <name>` serves over HTTP for web-based clients (v0.3.0+)
 - **Supports both Click and Typer**: Full compatibility with both frameworks

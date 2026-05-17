@@ -140,6 +140,71 @@ def serve_http(name: str | None, host: str, port: int, serve_all: bool):
     _serve_http(target_cli, name=name, host=host, port=port)
 
 
+@cli.command("list-tools")
+@click.argument("name", required=False, default=None)
+@click.option("--all", "list_all", is_flag=True, help="List tools from all discoverable CLIs")
+@click.option("--json-output", "-j", is_flag=True, help="Output as JSON (for scripting/CI)")
+def list_tools(name: str | None, list_all: bool, json_output: bool):
+    """List the MCP tools that would be exposed from a CLI.
+
+    Shows tool names, descriptions, and parameter schemas without starting
+    a server. Useful for debugging, CI validation, and documentation.
+    """
+    import json as _json
+    from .adapter import cli_to_mcp_tools
+
+    if not name and not list_all:
+        click.echo("Error: Specify a CLI name or --all", err=True)
+        sys.exit(1)
+
+    if list_all:
+        clis = scan_entry_points()
+        if not clis:
+            click.echo("No CLIs found.", err=True)
+            sys.exit(1)
+        all_tools = []
+        for cli_info in clis:
+            target_cli = load_cli(cli_info.name)
+            if target_cli is None:
+                continue
+            tools = cli_to_mcp_tools(target_cli, prefix=cli_info.name)
+            all_tools.extend(tools)
+    else:
+        target_cli = load_cli(name)
+        if target_cli is None:
+            click.echo(f"Error: CLI '{name}' not found.", err=True)
+            click.echo("Run 'click-to-mcp discover' to see available CLIs.", err=True)
+            sys.exit(1)
+        all_tools = cli_to_mcp_tools(target_cli, prefix=name)
+
+    if not all_tools:
+        click.echo("No MCP tools found for the specified CLI.", err=True)
+        sys.exit(1)
+
+    if json_output:
+        output = []
+        for tool in all_tools:
+            output.append({
+                "name": tool.name,
+                "description": tool.description,
+                "input_schema": tool.input_schema,
+            })
+        click.echo(_json.dumps(output, indent=2))
+    else:
+        click.echo(f"Found {len(all_tools)} MCP tool(s):")
+        click.echo()
+        for tool in all_tools:
+            click.echo(f"  {tool.name}")
+            click.echo(f"    {tool.description[:100]}")
+            params = tool.input_schema.get("properties", {})
+            required = tool.input_schema.get("required", [])
+            if params:
+                click.echo(f"    Parameters: {', '.join(params.keys())}")
+                if required:
+                    click.echo(f"    Required: {', '.join(required)}")
+            click.echo()
+
+
 @cli.command()
 def demo():
     """Run the built-in demo CLI as an MCP server (stdio)."""
