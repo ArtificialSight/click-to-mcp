@@ -6,6 +6,8 @@ COPY . .
 
 RUN pip install --no-cache-dir ".[http]"
 
-# Expose stdio MCP transport (default)
+# Expose HTTP SSE transport for Glama/Docker checks
+# The demo server starts a Click CLI wrapped as an MCP server on port 8001
+EXPOSE 8001
 ENTRYPOINT ["click-to-mcp"]
-CMD ["--help"]
+CMD ["demo-http-streamable", "--host", "0.0.0.0", "--port", "8001"]
