@@ -6,6 +6,9 @@
 [![LibHunt](https://img.shields.io/badge/LibHunt-%E2%87%92-blue?logo=codeigniter)](https://www.libhunt.com/r/Coding-Dev-Tools/click-to-mcp)
 [![Awesome MCP](https://img.shields.io/badge/Awesome_MCP-%E2%87%92-blue?logo=github)](https://github.com/punkpeye/awesome-mcp-servers)
 [![Awesome Python](https://img.shields.io/badge/Awesome_Python-%E2%87%92-blue?logo=python)](https://github.com/uhub/awesome-python)
+[![Awesome DevOps AI](https://img.shields.io/badge/Awesome_DevOps_AI-Submitted-grey?logo=github)](https://github.com/hammadhaqqani/awesome-devops-ai/pull/26)
+[![Awesome DevOps MCP](https://img.shields.io/badge/Awesome_DevOps_MCP-Submitted-grey?logo=github)](https://github.com/derisk-ai/awesome-devops-mcp-servers/pull/1)
+[![ToolSDK Registry](https://img.shields.io/badge/ToolSDK_Registry-Submitted-grey?logo=npm)](https://github.com/toolsdk-ai/toolsdk-mcp-registry/pull/310)
 
 Auto-wrap any [Click](https://click.palletsprojects.com/)/[typer](https://typer.tiangolo.com/) CLI as an [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) server.
 
