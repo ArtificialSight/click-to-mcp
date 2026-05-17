@@ -1,11 +1,11 @@
-# click-to-mcp
+﻿# click-to-mcp
 
 [![GitHub stars](https://img.shields.io/github/stars/Coding-Dev-Tools/click-to-mcp?style=social)](https://github.com/Coding-Dev-Tools/click-to-mcp/stargazers)
 [![PyPI](https://img.shields.io/pypi/v/click-to-mcp)](https://pypi.org/project/click-to-mcp/)
 
 Auto-wrap any [Click](https://click.palletsprojects.com/)/[typer](https://typer.tiangolo.com/) CLI as an [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) server.
 
-> ⭐ **Star this repo** if you use MCP with Python CLIs — it helps others discover click-to-mcp!
+> â­ **Star this repo** if you use MCP with Python CLIs â€” it helps others discover click-to-mcp!
 
 Part of the [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) developer tool ecosystem.
 
@@ -14,7 +14,7 @@ Part of the [Revenue Holdings](https://coding-dev-tools.github.io/revenueholding
 AI coding agents (Claude Code, Codex, Cursor) use MCP to interact with tools. 
 Instead of rewriting your CLI tools as MCP servers, use click-to-mcp to wrap them automatically.
 
-Works great with [Revenue Holdings CLI tools](https://coding-dev-tools.github.io/revenueholdings.dev/) — wrap `api-contract-guardian`, `json2sql`, `deploydiff`, or `configdrift` as MCP servers with zero code changes.
+Works great with [Revenue Holdings CLI tools](https://coding-dev-tools.github.io/revenueholdings.dev/) â€” wrap `api-contract-guardian`, `json2sql`, `deploydiff`, or `configdrift` as MCP servers with zero code changes.
 
 ## Quick Start
 
@@ -90,7 +90,7 @@ Add your CLI as an MCP server in your project's `.claude/settings.json`:
 }
 ```
 
-Now when you ask Claude Code to "validate my API contracts", it will automatically call the `acg_validate` MCP tool with the right arguments — no manual command-line invocation needed.
+Now when you ask Claude Code to "validate my API contracts", it will automatically call the `acg_validate` MCP tool with the right arguments â€” no manual command-line invocation needed.
 
 ### Cursor
 
@@ -153,9 +153,9 @@ When your MCP server is configured, the AI agent sees your CLI commands as nativ
 
 ```
 Agent: "I need to validate the API contract against the staging server."
-→ Calls MCP tool: acg_validate
+â†’ Calls MCP tool: acg_validate
   Arguments: { "spec_file": "openapi.yaml", "base_url": "https://staging.api.com", "strict": true, "output_format": "json" }
-← Result: "Validating openapi.yaml against https://staging.api.com...\n✓ All contracts pass"
+â† Result: "Validating openapi.yaml against https://staging.api.com...\nâœ“ All contracts pass"
 ```
 
 The agent doesn't need to know shell syntax, argument flags, or command names. It just calls the tool with structured arguments, and click-to-mcp handles the rest.
@@ -195,7 +195,7 @@ See [examples/api_contract_guardian_mcp.py](examples/api_contract_guardian_mcp.p
 
 ## Usage
 
-### CLI — Discover and Serve
+### CLI â€” Discover and Serve
 
 ```bash
 # List all installed Click/typer CLIs
@@ -215,7 +215,7 @@ click-to-mcp demo-http       # HTTP+SSE
 click-to-mcp --version
 ```
 
-### Library — Integrate directly
+### Library â€” Integrate directly
 
 ```python
 # my_cli.py
@@ -238,7 +238,7 @@ def validate(file: str, verbose: bool) -> None:
 serve_stdio(cli, name="my-cli", description="My CLI as MCP server")
 ```
 
-### Library — High-level `run()` API
+### Library â€” High-level `run()` API
 
 ```python
 from click_to_mcp import run
@@ -303,16 +303,16 @@ Configure your MCP client with the SSE URL:
 
 Click-to-MCP implements the standard MCP protocol with:
 
-- `initialize` — protocol handshake (returns server capabilities)
-- `tools/list` — discover all CLI commands as MCP tools with JSON Schema inputs
-- `tools/call` — invoke a CLI command with typed arguments
+- `initialize` â€” protocol handshake (returns server capabilities)
+- `tools/list` â€” discover all CLI commands as MCP tools with JSON Schema inputs
+- `tools/call` â€” invoke a CLI command with typed arguments
 
 ## Integration with Existing CLIs
 
 Add an MCP server entry point to any Click/typer CLI:
 
 ```python
-# cli.py — add a subcommand to run as MCP server
+# cli.py â€” add a subcommand to run as MCP server
 import typer
 from click_to_mcp import run
 
@@ -342,7 +342,7 @@ click-to-mcp demo-http               # starts MCP HTTP+SSE server on port 8000
 
 click-to-mcp is **free and open source** under Apache 2.0. No license key required, no rate limits, no telemetry.
 
-It also works with any [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) CLI tool — even on the free tier.
+It also works with any [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) CLI tool â€” even on the free tier.
 
 ## License
 
@@ -350,4 +350,5 @@ Apache 2.0
 
 ---
 
-<sub>Part of [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) — developer CLI tools built by autonomous AI agents.</sub>
+<sub>Part of [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) â€” developer CLI tools built by autonomous AI agents.</sub>
+
