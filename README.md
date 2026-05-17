@@ -63,6 +63,12 @@ click-to-mcp serve-http api-contract-guardian --port 8000
 # Or serve the built-in demo
 click-to-mcp demo            # stdio
 click-to-mcp demo-http       # HTTP+SSE on port 8000
+
+# Generate MCP client configuration (copy-paste ready JSON)
+click-to-mcp config api-contract-guardian
+click-to-mcp config api-contract-guardian --client cursor
+click-to-mcp config api-contract-guardian --transport http --port 9000
+click-to-mcp config --all --client vscode
 ```
 
 Then configure your MCP client to connect via stdio or HTTP.
@@ -272,6 +278,7 @@ run(app, prefix="my-cli")
 
 - **Auto-discovery**: `click-to-mcp discover` scans `console_scripts` entry points for Click/typer CLIs
 - **Tool preview**: `click-to-mcp list-tools <name>` shows MCP tools without starting a server (CI-friendly with `--json-output`)
+- **Client config**: `click-to-mcp config <name>` generates ready-to-paste JSON for Claude Desktop, Cursor, VS Code, Windsurf, and Cline
 - **Serve any CLI**: `click-to-mcp serve <name>` wraps any discovered CLI as an MCP server
 - **HTTP+SSE transport**: `click-to-mcp serve-http <name>` serves over HTTP for web-based clients (v0.3.0+)
 - **Supports both Click and Typer**: Full compatibility with both frameworks
