@@ -1,4 +1,5 @@
 ﻿# click-to-mcp
+<!-- mcp-name: io.github.coding-dev-tools/click-to-mcp -->
 
 [![GitHub stars](https://img.shields.io/github/stars/Coding-Dev-Tools/click-to-mcp?style=social)](https://github.com/Coding-Dev-Tools/click-to-mcp/stargazers)
 [![PyPI](https://img.shields.io/pypi/v/click-to-mcp)](https://pypi.org/project/click-to-mcp/)
