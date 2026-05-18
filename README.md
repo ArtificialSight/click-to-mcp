@@ -1,6 +1,7 @@
 # click-to-mcp
 <!-- mcp-name: io.github.coding-dev-tools/click-to-mcp -->
 
+[![CI](https://github.com/Coding-Dev-Tools/click-to-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Coding-Dev-Tools/click-to-mcp/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/Coding-Dev-Tools/click-to-mcp?style=social)](https://github.com/Coding-Dev-Tools/click-to-mcp/stargazers)
 [![PyPI](https://img.shields.io/pypi/v/click-to-mcp)](https://pypi.org/project/click-to-mcp/)
 [![Awesome MCP Server](https://img.shields.io/badge/Awesome_MCP_Server-Listed-brightgreen?logo=github)](https://github.com/abordage/awesome-mcp)
