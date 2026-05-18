@@ -2,6 +2,38 @@
 
 All notable changes to click-to-mcp will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- npm wrapper (`package.json` + `cli.js`) for npm discoverability and publish workflow (#9)
+- Awesome Codex CLI listing badge (PR #29 merged)
+- `abortage/awesome-mcp` merged badge
+- Glama MCP score badge to README
+- `server.json` for official MCP Registry compatibility
+- `mcp-name` tag for MCP Registry PyPI ownership verification
+- `bugs` URL in pyproject.toml
+- Python 3.13 to CI test matrix
+- Ruff lint CI step
+
+### Changed
+
+- Documentation branding updated from DevForge to Revenue Holdings
+- README quick start updated for PyPI availability
+- README tool count updated to 11
+- CI security hardened: `persist-credentials: false`, pinned permissions
+- Server license corrected to Apache-2.0 matching project license
+
+### Fixed
+
+- CI actions downgraded to stable v4/v5 (v6 caused workflow parse failures)
+- Broken PyPI badge/instructions removed from README — point to GitHub install
+- `SystemExit` caught in `scan_entry_points` for packages with missing optional deps
+- CI badge added to README
+- 7 ruff lint errors resolved
+- UTF-8 encoding (mojibake) in source files
+- `npm badge` reference fixed in README
+
 ## [0.5.0] — 2026-05-18
 
 ### Added
