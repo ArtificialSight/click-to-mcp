@@ -18,6 +18,6 @@
     "type": "git",
     "url": "https://github.com/Coding-Dev-Tools/click-to-mcp.git"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "tags": ["mcp", "cli", "click", "typer", "devops", "automation"]
 }
