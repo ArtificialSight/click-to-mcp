@@ -266,3 +266,53 @@ class TestDiscover:
             assert cli_obj is not None, f"CLI '{name}' resolved to None"
             # Should be a click.Group or have registered_commands (typer)
             assert hasattr(cli_obj, "commands") or hasattr(cli_obj, "registered_commands")
+
+
+# ---------------------------------------------------------------------------
+# TestInit — tests for __init__.py high-level helpers
+# ---------------------------------------------------------------------------
+
+
+class TestInit:
+    """Test the __init__.py module functions."""
+
+    def test_resolve_server_meta_defaults_to_cli(self) -> None:
+        """_resolve_server_meta should default name to 'cli' when name is empty."""
+        from click_to_mcp.__init__ import _resolve_server_meta
+
+        app = click.Group(name="")
+        name, desc, prefix = _resolve_server_meta(app)
+        assert name == "cli"
+
+    def test_resolve_server_meta_preserves_name(self) -> None:
+        """_resolve_server_meta should use provided name."""
+        from click_to_mcp.__init__ import _resolve_server_meta
+
+        app = click.Group(name="myapp")
+        name, desc, prefix = _resolve_server_meta(app, name="custom-name")
+        assert name == "custom-name"
+
+    def test_resolve_server_meta_uses_app_name(self) -> None:
+        """_resolve_server_meta should use app.name when no explicit name given."""
+        from click_to_mcp.__init__ import _resolve_server_meta
+
+        app = click.Group(name="myapp")
+        name, desc, prefix = _resolve_server_meta(app)
+        assert name == "myapp"
+        assert desc == ""
+
+    def test_resolve_server_meta_extracts_help(self) -> None:
+        """_resolve_server_meta should extract help text from click.Group."""
+        from click_to_mcp.__init__ import _resolve_server_meta
+
+        app = click.Group(name="myapp", help="My test app description")
+        name, desc, prefix = _resolve_server_meta(app)
+        assert desc == "My test app description"
+
+    def test_resolve_server_meta_preserves_prefix(self) -> None:
+        """_resolve_server_meta should return the prefix unchanged."""
+        from click_to_mcp.__init__ import _resolve_server_meta
+
+        app = click.Group(name="myapp")
+        name, desc, prefix = _resolve_server_meta(app, prefix="test-prefix")
+        assert prefix == "test-prefix"

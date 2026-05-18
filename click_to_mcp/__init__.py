@@ -24,16 +24,16 @@ from .discover import DiscoveredCLI, find_our_clis, load_cli, scan_entry_points
 from .server import serve_stdio
 
 
-def run(app: Any, prefix: str = "", name: str = "") -> None:
-    """High-level entry point: serve a Click/typer app as an MCP server over stdio.
-
-    This is the primary API for integrating click-to-mcp into your CLI tool.
-    Call it from your mcp subcommand or mcp_server.py module.
+def _resolve_server_meta(app: Any, prefix: str = "", name: str = "") -> tuple[str, str, str]:
+    """Extract server name and description from a Click/typer app.
 
     Args:
         app: A click.Group or typer.Typer instance.
-        prefix: Optional tool name prefix (e.g. 'acg' for api-contract-guardian).
-        name: Optional server name (defaults to app name or 'cli').
+        prefix: Optional tool name prefix.
+        name: Optional server name (overrides auto-detection).
+
+    Returns:
+        Tuple of (name, description, prefix).
     """
     if not name:
         name = getattr(app, "name", None) or "cli"
@@ -46,7 +46,21 @@ def run(app: Any, prefix: str = "", name: str = "") -> None:
         desc = getattr(app, "help", None) or ""
     if not isinstance(desc, str):
         desc = str(desc) if desc else ""
+    return name, desc, prefix
 
+
+def run(app: Any, prefix: str = "", name: str = "") -> None:
+    """High-level entry point: serve a Click/typer app as an MCP server over stdio.
+
+    This is the primary API for integrating click-to-mcp into your CLI tool.
+    Call it from your mcp subcommand or mcp_server.py module.
+
+    Args:
+        app: A click.Group or typer.Typer instance.
+        prefix: Optional tool name prefix (e.g. 'acg' for api-contract-guardian).
+        name: Optional server name (defaults to app name or 'cli').
+    """
+    name, desc, prefix = _resolve_server_meta(app, prefix, name)
     serve_stdio(
         app,
         name=name,
@@ -70,18 +84,7 @@ def run_http(app: Any, prefix: str = "", name: str = "",
     """
     from .http_server import serve_http
 
-    if not name:
-        name = getattr(app, "name", None) or "cli"
-    desc = ""
-    if hasattr(app, "info"):
-        info_desc = getattr(app.info, "help", None)
-        if info_desc and "DefaultPlaceholder" not in str(type(info_desc)):
-            desc = str(info_desc)
-    if not desc:
-        desc = getattr(app, "help", None) or ""
-    if not isinstance(desc, str):
-        desc = str(desc) if desc else ""
-
+    name, desc, prefix = _resolve_server_meta(app, prefix, name)
     serve_http(
         app,
         name=name,
@@ -110,18 +113,7 @@ def run_http_streamable(app: Any, prefix: str = "", name: str = "",
     """
     from .streamable_http import serve_http_streamable
 
-    if not name:
-        name = getattr(app, "name", None) or "cli"
-    desc = ""
-    if hasattr(app, "info"):
-        info_desc = getattr(app.info, "help", None)
-        if info_desc and "DefaultPlaceholder" not in str(type(info_desc)):
-            desc = str(info_desc)
-    if not desc:
-        desc = getattr(app, "help", None) or ""
-    if not isinstance(desc, str):
-        desc = str(desc) if desc else ""
-
+    name, desc, prefix = _resolve_server_meta(app, prefix, name)
     serve_http_streamable(
         app,
         name=name,
