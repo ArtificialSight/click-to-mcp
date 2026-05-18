@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import click
+import os
 import sys
 
 from . import __version__, serve_stdio
@@ -22,6 +23,11 @@ try:
     # The installed version may return a LicenseStatus object instead of a decorator.
     # Wrap it to handle both cases.
     def require_license(tool):
+        # Allow bypass via env var for testing/CI — prevents rate-limit failures
+        if os.environ.get("CLICK_TO_MCP_NO_LICENSE"):
+            def identity(func):
+                return func
+            return identity
         result = _require_license_raw(tool)
         if callable(result):
             # It returned a decorator — use it
