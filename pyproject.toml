@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "click-to-mcp"
 version = "0.5.0"
-description = "Auto-wrap any Click/typer CLI as an MCP (Model Context Protocol) server â€” with auto-discovery, stdio, HTTP+SSE, and Streamable HTTP transport"
+description = "Auto-wrap any Click/typer CLI as an MCP (Model Context Protocol) server — with auto-discovery, stdio, HTTP+SSE, and Streamable HTTP transport"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 authors = [
@@ -43,6 +43,8 @@ dev = [
 [project.urls]
 Homepage = "https://github.com/Coding-Dev-Tools/click-to-mcp"
 Repository = "https://github.com/Coding-Dev-Tools/click-to-mcp"
+Changelog = "https://github.com/Coding-Dev-Tools/click-to-mcp/blob/master/CHANGELOG.md"
+Bug Tracker = "https://github.com/Coding-Dev-Tools/click-to-mcp/issues"
 
 [project.scripts]
 click-to-mcp = "click_to_mcp.cli:main"
