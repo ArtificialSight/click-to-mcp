@@ -85,7 +85,7 @@ def scan_entry_points() -> list[DiscoveredCLI]:
                 summary=summary,
                 is_typer=(cli_type == "typer"),
             ))
-        except Exception:
+        except (Exception, SystemExit):
             continue
 
     return discovered
