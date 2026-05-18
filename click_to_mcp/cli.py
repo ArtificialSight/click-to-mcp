@@ -162,6 +162,7 @@ def list_tools(name: str | None, list_all: bool, json_output: bool):
     a server. Useful for debugging, CI validation, and documentation.
     """
     import json as _json
+
     from .adapter import cli_to_mcp_tools
 
     if not name and not list_all:
@@ -375,16 +376,12 @@ def config(name: str | None, client: str, transport: str, host: str, port: int,
 
     # Format output based on client
     client_key = client.lower()
-    if client_key == "claude-desktop":
-        output = {"mcpServers": server_configs}
-    elif client_key == "cursor":
+    if client_key == "claude-desktop" or client_key == "cursor":
         output = {"mcpServers": server_configs}
     elif client_key == "vscode":
         # VS Code Copilot uses "inputs" and "servers" at top level
         output = {"mcp": {"servers": server_configs}}
-    elif client_key == "windsurf":
-        output = {"mcpServers": server_configs}
-    elif client_key == "cline":
+    elif client_key == "windsurf" or client_key == "cline":
         output = {"mcpServers": server_configs}
     else:
         output = {"mcpServers": server_configs}
