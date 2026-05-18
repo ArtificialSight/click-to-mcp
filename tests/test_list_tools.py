@@ -3,10 +3,7 @@
 from __future__ import annotations
 
 import json
-
-import pytest
-
-from click_to_mcp.adapter import cli_to_mcp_tools, CliToolDef
+from click_to_mcp.adapter import cli_to_mcp_tools
 from click_to_mcp.demo import cli as demo_cli
 
 
