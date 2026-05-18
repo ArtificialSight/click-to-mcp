@@ -2,6 +2,21 @@
 
 All notable changes to click-to-mcp will be documented in this file.
 
+## [0.5.0] — 2026-05-18
+
+### Added
+
+- **`config` command** — Generate MCP client configuration JSON for Claude Desktop, Cursor, VS Code, Windsurf, and Cline (`click-to-mcp config <name>`).
+- **`list-tools` command** — Preview MCP tools without starting a server (`click-to-mcp list-tools <name>`).
+- **`--json-output` / `-j` flag** on `list-tools` for CI/scripting.
+- **`serve-http-streamable` and `demo-http-streamable` commands** — CLI commands for the Streamable HTTP transport.
+- **Ruff lint step in CI** — Automated linting on every push/PR.
+- Proper print discover of the actual package version in MCP initialize response.
+
+### Changed
+
+- Version bumped to 0.5.0.
+
 ## [0.4.0] — 2026-05-15
 
 ### Added
