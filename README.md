@@ -11,7 +11,9 @@
 
 Auto-wrap any [Click](https://click.palletsprojects.com/)/[typer](https://typer.tiangolo.com/) CLI as an [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) server.
 
-> ⭐ **Star this repo** if you use MCP with Python CLIs — it helps others discover click-to-mcp!
+> ⭐ **Star this repo** if you build CLI tools — it helps other devs discover click-to-mcp!
+
+[![npm](https://img.shields.io/npm/v/click-to-mcp)](https://www.npmjs.com/package/click-to-mcp)
 
 Part of the [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) developer tool ecosystem.
 
