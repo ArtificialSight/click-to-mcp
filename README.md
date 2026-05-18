@@ -3,14 +3,9 @@
 
 [![GitHub stars](https://img.shields.io/github/stars/Coding-Dev-Tools/click-to-mcp?style=social)](https://github.com/Coding-Dev-Tools/click-to-mcp/stargazers)
 [![PyPI](https://img.shields.io/pypi/v/click-to-mcp)](https://pypi.org/project/click-to-mcp/)
+[![Awesome MCP Server](https://img.shields.io/badge/Awesome_MCP_Server-Listed-brightgreen?logo=github)](https://github.com/abordage/awesome-mcp)
 [![Open Source Alternative](https://img.shields.io/badge/Open_Source_Alternative-%E2%87%92-blue?logo=opensourceinitiative)](https://www.opensourcealternative.to/project/click-to-mcp)
 [![LibHunt](https://img.shields.io/badge/LibHunt-%E2%87%92-blue?logo=codeigniter)](https://www.libhunt.com/r/Coding-Dev-Tools/click-to-mcp)
-[![Awesome MCP](https://img.shields.io/badge/Awesome_MCP-%E2%87%92-blue?logo=github)](https://github.com/punkpeye/awesome-mcp-servers)
- [![Awesome MCP Server](https://img.shields.io/badge/Awesome_MCP_Server-Listed-brightgreen?logo=github)](https://github.com/abordage/awesome-mcp)
-[![Awesome Python](https://img.shields.io/badge/Awesome_Python-%E2%87%92-blue?logo=python)](https://github.com/uhub/awesome-python)
-[![Awesome DevOps AI](https://img.shields.io/badge/Awesome_DevOps_AI-Submitted-grey?logo=github)](https://github.com/hammadhaqqani/awesome-devops-ai/pull/26)
-[![Awesome DevOps MCP](https://img.shields.io/badge/Awesome_DevOps_MCP-Submitted-grey?logo=github)](https://github.com/derisk-ai/awesome-devops-mcp-servers/pull/1)
-[![ToolSDK Registry](https://img.shields.io/badge/ToolSDK_Registry-Submitted-grey?logo=npm)](https://github.com/toolsdk-ai/toolsdk-mcp-registry/pull/310)
 
 Auto-wrap any [Click](https://click.palletsprojects.com/)/[typer](https://typer.tiangolo.com/) CLI as an [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) server.
 
@@ -18,12 +13,27 @@ Auto-wrap any [Click](https://click.palletsprojects.com/)/[typer](https://typer.
 
 Part of the [Revenue Holdings](https://coding-dev-tools.github.io/revenueholdings.dev/) developer tool ecosystem.
 
-## Why?
+## Why click-to-mcp?
 
-AI coding agents (Claude Code, Codex, Cursor) use MCP to interact with tools. 
-Instead of rewriting your CLI tools as MCP servers, use click-to-mcp to wrap them automatically.
+**The problem:** You have Python CLIs built with Click or typer. Your AI coding agent (Claude Code, Codex, Cursor) needs to call them — but MCP servers require writing boilerplate from scratch.
 
-Works great with [Revenue Holdings CLI tools](https://coding-dev-tools.github.io/revenueholdings.dev/) â€” wrap `api-contract-guardian`, `json2sql`, `deploydiff`, or `configdrift` as MCP servers with zero code changes.
+**The old way:**
+1. Create a new Python package for your MCP server
+2. Define JSON Schema for every tool manually
+3. Wire up stdio/HTTP transport
+4. Keep it in sync when your CLI changes
+
+**The click-to-mcp way:**
+```bash
+pip install click-to-mcp
+click-to-mcp serve your-cli
+```
+
+One command. Your CLI is now an MCP server. No boilerplate, no schema writing, no maintenance burden.
+
+**Real example:** `api-contract-guardian` has 6 commands with 20+ options. Writing an MCP server for it would take 200+ lines of boilerplate. With click-to-mcp: `click-to-mcp serve api-contract-guardian` — done.
+
+Works with [Revenue Holdings CLI tools](https://coding-dev-tools.github.io/revenueholdings.dev/) out of the box — wrap `api-contract-guardian`, `json2sql`, `deploydiff`, or `configdrift` as MCP servers with zero code changes.
 
 ## Quick Start
 
