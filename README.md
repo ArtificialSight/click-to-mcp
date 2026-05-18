@@ -3,7 +3,6 @@
 
 [![CI](https://github.com/Coding-Dev-Tools/click-to-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Coding-Dev-Tools/click-to-mcp/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/Coding-Dev-Tools/click-to-mcp?style=social)](https://github.com/Coding-Dev-Tools/click-to-mcp/stargazers)
-[![PyPI](https://img.shields.io/pypi/v/click-to-mcp)](https://pypi.org/project/click-to-mcp/)
 [![Awesome MCP Server](https://img.shields.io/badge/Awesome_MCP_Server-Listed-brightgreen?logo=github)](https://github.com/abordage/awesome-mcp)
 [![Open Source Alternative](https://img.shields.io/badge/Open_Source_Alternative-%E2%87%92-blue?logo=opensourceinitiative)](https://www.opensourcealternative.to/project/click-to-mcp)
 [![LibHunt](https://img.shields.io/badge/LibHunt-%E2%87%92-blue?logo=codeigniter)](https://www.libhunt.com/r/Coding-Dev-Tools/click-to-mcp)
@@ -39,21 +38,16 @@ Works with [DevForge CLI tools](https://coding-dev-tools.github.io/devforge.dev/
 
 ## Quick Start
 
-Install from PyPI (recommended):
+Install from GitHub (recommended, package publishing pending):
 
 ```bash
-pip install click-to-mcp
+pip install git+https://github.com/Coding-Dev-Tools/click-to-mcp.git
 ```
 
 For HTTP+SSE transport (web-based MCP clients), install with the `http` extra:
 
 ```bash
-pip install "click-to-mcp[http]"
-```
-
-Install directly from GitHub (latest development version):
-```bash
-pip install git+https://github.com/Coding-Dev-Tools/click-to-mcp.git
+pip install "click-to-mcp[http] @ git+https://github.com/Coding-Dev-Tools/click-to-mcp.git"
 ```
 
 Or install via Homebrew (macOS/Linux):
