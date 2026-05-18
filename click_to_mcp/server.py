@@ -10,6 +10,7 @@ import traceback
 from typing import Any
 
 from .adapter import CliToolDef, cli_to_mcp_tools
+from ._version import __version__
 
 
 def _make_jsonrpc_response(request_id: Any, result: Any = None, error: dict | None = None) -> str:
@@ -48,7 +49,7 @@ def serve_stdio(
 
     server_info = {
         "name": name,
-        "version": "0.1.0",
+        "version": __version__,
         "description": description or f"MCP server for {name}",
     }
 
