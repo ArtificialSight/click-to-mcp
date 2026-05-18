@@ -27,8 +27,19 @@ Works great with [Revenue Holdings CLI tools](https://coding-dev-tools.github.io
 
 ## Quick Start
 
-Install directly from GitHub (PyPI coming soon):
+Install from PyPI (recommended):
 
+```bash
+pip install click-to-mcp
+```
+
+For HTTP+SSE transport (web-based MCP clients), install with the `http` extra:
+
+```bash
+pip install "click-to-mcp[http]"
+```
+
+Install directly from GitHub (latest development version):
 ```bash
 pip install git+https://github.com/Coding-Dev-Tools/click-to-mcp.git
 ```
@@ -43,12 +54,6 @@ Or install via Scoop (Windows):
 ```bash
 scoop bucket add Coding-Dev-Tools https://github.com/Coding-Dev-Tools/scoop-bucket
 scoop install click-to-mcp
-```
-
-For HTTP+SSE transport (web-based MCP clients), install with the `http` extra:
-
-```bash
-pip install "click-to-mcp[http] @ git+https://github.com/Coding-Dev-Tools/click-to-mcp.git"
 ```
 
 ```bash
