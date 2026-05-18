@@ -9,8 +9,8 @@ import sys
 import traceback
 from typing import Any
 
-from .adapter import CliToolDef, cli_to_mcp_tools
 from ._version import __version__
+from .adapter import CliToolDef, cli_to_mcp_tools
 
 
 def _make_jsonrpc_response(request_id: Any, result: Any = None, error: dict | None = None) -> str:
