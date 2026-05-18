@@ -18,11 +18,10 @@ from __future__ import annotations
 
 from typing import Any
 
+from ._version import __version__
 from .adapter import CliToolDef, cli_to_mcp_tools
 from .discover import DiscoveredCLI, find_our_clis, load_cli, scan_entry_points
 from .server import serve_stdio
-
-__version__ = "0.5.0"
 
 
 def run(app: Any, prefix: str = "", name: str = "") -> None:
@@ -134,6 +133,7 @@ def run_http_streamable(app: Any, prefix: str = "", name: str = "",
 
 
 __all__ = [
+    "__version__",
     "cli_to_mcp_tools", "CliToolDef", "serve_stdio", "run", "run_http",
     "run_http_streamable",
     "scan_entry_points", "load_cli", "find_our_clis", "DiscoveredCLI",

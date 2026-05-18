@@ -10,7 +10,7 @@ import subprocess
 import sys
 from click_to_mcp.adapter import CliToolDef, cli_to_mcp_tools
 from click_to_mcp.demo import cli as demo_cli
-from click_to_mcp.discover import DiscoveredCLI, scan_entry_points
+from click_to_mcp.discover import DiscoveredCLI, find_our_clis, import_cli, scan_entry_points
 
 # ---------------------------------------------------------------------------
 # TestAdapter — unit tests for cli_to_mcp_tools with the demo CLI
@@ -185,3 +185,42 @@ class TestDiscover:
         }
         actual_fields = {f.name for f in dataclasses.fields(DiscoveredCLI)}
         assert actual_fields == expected_fields
+
+    def test_import_cli_known_module(self) -> None:
+        """import_cli should load a known module and return the correct object."""
+        result = import_cli("click_to_mcp.demo", "cli")
+        assert result is not None
+        assert hasattr(result, "commands")
+        assert "greet" in result.commands
+
+    def test_import_cli_no_attr_falls_back(self) -> None:
+        """import_cli with empty attr should try common conventions."""
+        result = import_cli("click_to_mcp.demo", "")
+        assert result is not None
+        assert hasattr(result, "commands")
+
+    def test_import_cli_nonexistent_module(self) -> None:
+        """import_cli should return None for non-existent paths."""
+        result = import_cli("nonexistent.module.xyz", "cli")
+        assert result is None
+
+    def test_import_cli_nonexistent_attr(self) -> None:
+        """import_cli should return None for non-existent attributes."""
+        result = import_cli("click_to_mcp.demo", "does_not_exist_12345")
+        assert result is None
+
+    def test_find_our_clis_returns_dict(self) -> None:
+        """find_our_clis should return a dict (possibly empty)."""
+        result = find_our_clis()
+        assert isinstance(result, dict)
+        # Should have at minimum click-to-mcp's own demo if nothing else
+        # But more importantly it shouldn't crash
+
+    def test_find_our_clis_values_are_callable_clis(self) -> None:
+        """Values returned by find_our_clis should be valid CLI objects."""
+        result = find_our_clis()
+        # If we have any results, they should be click groups or typer apps
+        for name, cli_obj in result.items():
+            assert cli_obj is not None, f"CLI '{name}' resolved to None"
+            # Should be a click.Group or have registered_commands (typer)
+            assert hasattr(cli_obj, "commands") or hasattr(cli_obj, "registered_commands")
