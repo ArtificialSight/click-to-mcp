@@ -7,7 +7,6 @@
 [![Awesome MCP Server](https://img.shields.io/badge/Awesome_MCP_Server-Listed-brightgreen?logo=github)](https://github.com/abordage/awesome-mcp)
 [![Awesome Codex CLI](https://img.shields.io/badge/Awesome_Codex_CLI-Listed-brightgreen?logo=github)](https://github.com/milisp/awesome-codex-cli)
 [![Open Source Alternative](https://img.shields.io/badge/Open_Source_Alternative-%E2%87%92-blue?logo=opensourceinitiative)](https://www.opensourcealternative.to/project/click-to-mcp)
-[![LibHunt](https://img.shields.io/badge/LibHunt-%E2%87%92-blue?logo=codeigniter)](https://www.libhunt.com/r/Coding-Dev-Tools/click-to-mcp)
 [![Glama](https://glama.ai/mcp/servers/Coding-Dev-Tools/click-to-mcp/badges/score.svg)](https://glama.ai/mcp/servers/Coding-Dev-Tools/click-to-mcp)
 
 Auto-wrap any [Click](https://click.palletsprojects.com/)/[typer](https://typer.tiangolo.com/) CLI as an [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) server.
